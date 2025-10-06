@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pca_website/foundation/providers/language_provider.dart';
 import 'package:pca_website/foundation/providers/theme_provider.dart';
+import 'package:pca_website/screens/home_screen.dart';
+import 'package:pca_website/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
-
-import 'screens/home_screen.dart';
-
 
 void main() {
   runApp(const MyWebsite());
-
 }
+
+// (removed navigatorKey and in-app initial LoadingScreen)
+
 class MyWebsite extends StatelessWidget {
   const MyWebsite({super.key});
 
@@ -30,16 +31,14 @@ class MyWebsite extends StatelessWidget {
             darkTheme: themeProvider.darkTheme,
             themeMode: themeProvider.themeMode,
             locale: languageProvider.currentLocale,
-            supportedLocales: const [
-              Locale('ar', 'SA'),
-              Locale('en', 'US'),
-            ],
+            supportedLocales: const [Locale('ar', 'SA'), Locale('en', 'US')],
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            home: const HomeScreen(),
+            // Start with in-app animated SplashScreen; it will navigate to HomeScreen.
+            home: const SplashScreen(),
           );
         },
       ),

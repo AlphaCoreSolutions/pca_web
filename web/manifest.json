@@ -1,11 +1,11 @@
 {
-    "name": "pca_website",
-    "short_name": "pca_website",
+    "name": "PCA - Power Construction Arabia",
+    "short_name": "PCA",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#F0B81B",
+    "theme_color": "#F0B81B",
+    "description": "Power Construction Arabia - Leading construction and engineering company providing comprehensive solutions for electrical, mechanical, civil, and infrastructure projects.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

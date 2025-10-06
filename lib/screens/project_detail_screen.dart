@@ -27,12 +27,22 @@ class ProjectDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMediumScreen = screenWidth > 768;
+    final isSmallScreen = screenWidth <= 600;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: Text(isArabic ? 'تفاصيل المشروع' : 'Project Details'),
+        title: Text(
+          isArabic ? 'تفاصيل المشروع' : 'Project Details',
+          style: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: isSmallScreen ? 18 : 20,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -46,9 +56,13 @@ class ProjectDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Project Image Header (static as before)
+            // Project Image Header - Responsive
             Container(
-              height: 300,
+              height: isSmallScreen
+                  ? 250
+                  : isMediumScreen
+                  ? 350
+                  : 400,
               width: double.infinity,
               decoration: BoxDecoration(
                 image: project['image'] != null
@@ -81,12 +95,16 @@ class ProjectDetailScreen extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.bottomLeft,
                         child: Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: EdgeInsets.all(isSmallScreen ? 16 : 20),
                           child: Text(
                             project['title']!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontFamily: 'Cairo',
-                              fontSize: 28,
+                              fontSize: isSmallScreen
+                                  ? 24
+                                  : isMediumScreen
+                                  ? 28
+                                  : 32,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -96,9 +114,15 @@ class ProjectDetailScreen extends StatelessWidget {
                     ),
             ),
 
-            // Project Content (static as before)
+            // Project Content - Responsive padding
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(
+                isSmallScreen
+                    ? 16
+                    : isMediumScreen
+                    ? 24
+                    : 32,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -109,9 +133,9 @@ class ProjectDetailScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isSmallScreen ? 12 : 16,
+                                vertical: isSmallScreen ? 6 : 8,
                               ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF0B81B).withOpacity(0.1),
@@ -119,19 +143,20 @@ class ProjectDetailScreen extends StatelessWidget {
                               ),
                               child: Text(
                                 project['category']!,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontFamily: 'Cairo',
-                                  color: Color(0xFFF0B81B),
+                                  color: const Color(0xFFF0B81B),
                                   fontWeight: FontWeight.bold,
+                                  fontSize: isSmallScreen ? 12 : 14,
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            SizedBox(height: isSmallScreen ? 8 : 10),
                             Text(
                               '${isArabic ? 'العميل' : 'Client'}: ${project['client']}',
                               style: TextStyle(
                                 fontFamily: 'Cairo',
-                                fontSize: 16,
+                                fontSize: isSmallScreen ? 14 : 16,
                                 color: Colors.grey[700],
                               ),
                             ),
@@ -141,94 +166,148 @@ class ProjectDetailScreen extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 30),
+                  SizedBox(height: isSmallScreen ? 20 : 30),
 
                   Text(
                     project['description']!,
                     style: TextStyle(
                       fontFamily: 'Cairo',
-                      fontSize: 16,
+                      fontSize: isSmallScreen ? 14 : 16,
                       color: Colors.grey[700],
                       height: 1.6,
                     ),
                   ),
 
-                  const SizedBox(height: 40),
+                  SizedBox(height: isSmallScreen ? 30 : 40),
 
                   Text(
                     isArabic ? 'مواصفات المشروع' : 'Project Specifications',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Cairo',
-                      fontSize: 24,
+                      fontSize: isSmallScreen
+                          ? 20
+                          : isMediumScreen
+                          ? 24
+                          : 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: isSmallScreen ? 16 : 20),
 
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: MediaQuery.of(context).size.width > 600
-                        ? 2
-                        : 1,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 15,
-                    childAspectRatio: 4,
-                    children: [
-                      _buildSpecificationItem(
-                        Icons.schedule,
-                        isArabic ? 'مدة التنفيذ' : 'Implementation Period',
-                        project['duration'] ??
-                            (isArabic ? '6-12 شهر' : '6-12 Months'),
-                      ),
-                      _buildSpecificationItem(
-                        Icons.attach_money,
-                        isArabic ? 'الميزانية' : 'Budget Range',
-                        project['budget'] ??
-                            (isArabic
-                                ? 'متفاوت حسب المشروع'
-                                : 'Varies by Project'),
-                      ),
-                      _buildSpecificationItem(
-                        Icons.engineering,
-                        isArabic ? 'نطاق العمل' : 'Scope of Work',
-                        isArabic
-                            ? 'تصميم وتنفيذ متكامل'
-                            : 'Integrated Design & Implementation',
-                      ),
-                      _buildSpecificationItem(
-                        Icons.verified,
-                        isArabic ? 'معايير الجودة' : 'Quality Standards',
-                        isArabic
-                            ? 'سعودية ودولية'
-                            : 'Saudi & International Standards',
-                      ),
-                    ],
-                  ),
+                  // Responsive specifications grid
+                  if (isSmallScreen)
+                    // Mobile: Single column
+                    Column(
+                      children: [
+                        _buildSpecificationItem(
+                          Icons.schedule,
+                          isArabic ? 'مدة التنفيذ' : 'Implementation Period',
+                          project['duration'] ??
+                              (isArabic ? '6-12 شهر' : '6-12 Months'),
+                          isSmallScreen: isSmallScreen,
+                        ),
+                        const SizedBox(height: 15),
+                        _buildSpecificationItem(
+                          Icons.attach_money,
+                          isArabic ? 'الميزانية' : 'Budget Range',
+                          project['budget'] ??
+                              (isArabic
+                                  ? 'متفاوت حسب المشروع'
+                                  : 'Varies by Project'),
+                          isSmallScreen: isSmallScreen,
+                        ),
+                        const SizedBox(height: 15),
+                        _buildSpecificationItem(
+                          Icons.engineering,
+                          isArabic ? 'نطاق العمل' : 'Scope of Work',
+                          isArabic
+                              ? 'تصميم وتنفيذ متكامل'
+                              : 'Integrated Design & Implementation',
+                          isSmallScreen: isSmallScreen,
+                        ),
+                        const SizedBox(height: 15),
+                        _buildSpecificationItem(
+                          Icons.verified,
+                          isArabic ? 'معايير الجودة' : 'Quality Standards',
+                          isArabic
+                              ? 'سعودية ودولية'
+                              : 'Saudi & International Standards',
+                          isSmallScreen: isSmallScreen,
+                        ),
+                      ],
+                    )
+                  else
+                    // Desktop/Tablet: Grid
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: isMediumScreen ? 2 : 1,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 15,
+                      childAspectRatio: isMediumScreen ? 4 : 3,
+                      children: [
+                        _buildSpecificationItem(
+                          Icons.schedule,
+                          isArabic ? 'مدة التنفيذ' : 'Implementation Period',
+                          project['duration'] ??
+                              (isArabic ? '6-12 شهر' : '6-12 Months'),
+                          isSmallScreen: isSmallScreen,
+                        ),
+                        _buildSpecificationItem(
+                          Icons.attach_money,
+                          isArabic ? 'الميزانية' : 'Budget Range',
+                          project['budget'] ??
+                              (isArabic
+                                  ? 'متفاوت حسب المشروع'
+                                  : 'Varies by Project'),
+                          isSmallScreen: isSmallScreen,
+                        ),
+                        _buildSpecificationItem(
+                          Icons.engineering,
+                          isArabic ? 'نطاق العمل' : 'Scope of Work',
+                          isArabic
+                              ? 'تصميم وتنفيذ متكامل'
+                              : 'Integrated Design & Implementation',
+                          isSmallScreen: isSmallScreen,
+                        ),
+                        _buildSpecificationItem(
+                          Icons.verified,
+                          isArabic ? 'معايير الجودة' : 'Quality Standards',
+                          isArabic
+                              ? 'سعودية ودولية'
+                              : 'Saudi & International Standards',
+                          isSmallScreen: isSmallScreen,
+                        ),
+                      ],
+                    ),
 
-                  const SizedBox(height: 40),
+                  SizedBox(height: isSmallScreen ? 30 : 40),
 
                   Text(
                     isArabic ? 'مميزات المشروع' : 'Project Features',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Cairo',
-                      fontSize: 24,
+                      fontSize: isSmallScreen
+                          ? 20
+                          : isMediumScreen
+                          ? 24
+                          : 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: isSmallScreen ? 16 : 20),
 
                   Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
+                    spacing: isSmallScreen ? 8 : 10,
+                    runSpacing: isSmallScreen ? 8 : 10,
                     children: (project['features'] as List<String>)
                         .map(
                           (feature) => Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isSmallScreen ? 12 : 16,
+                              vertical: isSmallScreen ? 8 : 10,
                             ),
                             decoration: BoxDecoration(
                               color: Colors.orange[50],
@@ -238,18 +317,19 @@ class ProjectDetailScreen extends StatelessWidget {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.check_circle,
-                                  size: 16,
-                                  color: Color(0xFFF0B81B),
+                                  size: isSmallScreen ? 14 : 16,
+                                  color: const Color(0xFFF0B81B),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: isSmallScreen ? 6 : 8),
                                 Text(
                                   feature,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontFamily: 'Cairo',
-                                    color: Color(0xFFF0B81B),
+                                    color: const Color(0xFFF0B81B),
                                     fontWeight: FontWeight.w500,
+                                    fontSize: isSmallScreen ? 12 : 14,
                                   ),
                                 ),
                               ],
@@ -259,11 +339,11 @@ class ProjectDetailScreen extends StatelessWidget {
                         .toList(),
                   ),
 
-                  const SizedBox(height: 50),
+                  SizedBox(height: isSmallScreen ? 40 : 50),
 
-                  // CTA
+                  // CTA - Responsive
                   Container(
-                    padding: const EdgeInsets.all(30),
+                    padding: EdgeInsets.all(isSmallScreen ? 20 : 30),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
@@ -278,79 +358,144 @@ class ProjectDetailScreen extends StatelessWidget {
                           isArabic
                               ? 'مهتم بمشروع مماثل؟'
                               : 'Interested in a similar project?',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'Cairo',
-                            fontSize: 22,
+                            fontSize: isSmallScreen
+                                ? 18
+                                : isMediumScreen
+                                ? 22
+                                : 24,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: isSmallScreen ? 8 : 10),
                         Text(
                           isArabic
                               ? 'تواصل معنا لتنفيذ مشروعك بأعلى معايير الجودة'
                               : 'Contact us to execute your project with the highest quality standards',
                           style: TextStyle(
                             fontFamily: 'Cairo',
-                            fontSize: 16,
+                            fontSize: isSmallScreen ? 14 : 16,
                             color: Colors.grey[700],
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 25),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () =>
-                                    _showQuoteRequestDialog(context),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFF0B81B),
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
+                        SizedBox(height: isSmallScreen ? 20 : 25),
+                        // Responsive button layout
+                        if (isSmallScreen)
+                          // Mobile: Stacked buttons
+                          Column(
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () =>
+                                      _showQuoteRequestDialog(context),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFF0B81B),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                   ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: Text(
-                                  isArabic ? 'اطلب عرض سعر' : 'Request Quote',
-                                  style: const TextStyle(
-                                    fontFamily: 'Cairo',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: () => Navigator.pop(context),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: const Color(0xFFF0B81B),
-                                  side: const BorderSide(
-                                    color: Color(0xFFF0B81B),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: Text(
-                                  isArabic ? 'مشاريع أخرى' : 'Other Projects',
-                                  style: const TextStyle(
-                                    fontFamily: 'Cairo',
-                                    fontSize: 16,
+                                  child: Text(
+                                    isArabic ? 'اطلب عرض سعر' : 'Request Quote',
+                                    style: const TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
+                              const SizedBox(height: 12),
+                              SizedBox(
+                                width: double.infinity,
+                                child: OutlinedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: const Color(0xFFF0B81B),
+                                    side: const BorderSide(
+                                      color: Color(0xFFF0B81B),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    isArabic ? 'مشاريع أخرى' : 'Other Projects',
+                                    style: const TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        else
+                          // Desktop/Tablet: Side by side buttons
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () =>
+                                      _showQuoteRequestDialog(context),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFF0B81B),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    isArabic ? 'اطلب عرض سعر' : 'Request Quote',
+                                    style: const TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 15),
+                              Expanded(
+                                child: OutlinedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: const Color(0xFFF0B81B),
+                                    side: const BorderSide(
+                                      color: Color(0xFFF0B81B),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    isArabic ? 'مشاريع أخرى' : 'Other Projects',
+                                    style: const TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   ),
@@ -368,6 +513,9 @@ class ProjectDetailScreen extends StatelessWidget {
     // Capture the page (Scaffold) context so SnackBars show after the dialog closes.
     final BuildContext rootContext = context;
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth <= 600;
+
     final TextEditingController mobileController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
     final TextEditingController noteController = TextEditingController();
@@ -383,18 +531,23 @@ class ProjectDetailScreen extends StatelessWidget {
         return Directionality(
           textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
           child: Dialog(
-            insetPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 40,
+            insetPadding: EdgeInsets.symmetric(
+              horizontal: isSmallScreen ? 16 : 20,
+              vertical: isSmallScreen ? 20 : 40,
             ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 400, maxWidth: 500),
+              constraints: BoxConstraints(
+                minWidth: isSmallScreen ? 300 : 400,
+                maxWidth: isSmallScreen ? 350 : 500,
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(isSmallScreen ? 16 : 20),
                 child: StatefulBuilder(
                   builder: (dialogCtx, setState) {
                     return SizedBox(
-                      height: MediaQuery.of(dialogCtx).size.height * 0.7,
+                      height:
+                          MediaQuery.of(dialogCtx).size.height *
+                          (isSmallScreen ? 0.8 : 0.7),
                       child: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -403,12 +556,14 @@ class ProjectDetailScreen extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  isArabic ? 'طلب عرض سعر' : 'Request Quote',
-                                  style: const TextStyle(
-                                    fontFamily: 'Cairo',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                Expanded(
+                                  child: Text(
+                                    isArabic ? 'طلب عرض سعر' : 'Request Quote',
+                                    style: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: isSmallScreen ? 18 : 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                                 IconButton(
@@ -418,31 +573,31 @@ class ProjectDetailScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: isSmallScreen ? 6 : 8),
                             Text(
                               isArabic
                                   ? 'املأ النموذج أدناه وسنتواصل معك قريباً'
                                   : 'Fill out the form below and we will contact you soon',
                               style: TextStyle(
                                 fontFamily: 'Cairo',
-                                fontSize: 14,
+                                fontSize: isSmallScreen ? 12 : 14,
                                 color: Colors.grey[600],
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            SizedBox(height: isSmallScreen ? 16 : 20),
 
                             // Service Type
                             Text(
                               isArabic
                                   ? 'نوع الخدمة المطلوبة *'
                                   : 'Required Service Type *',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontFamily: 'Cairo',
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: isSmallScreen ? 12 : 14,
                               ),
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: isSmallScreen ? 4 : 6),
 
                             FutureBuilder<List<DomainDetailModel>>(
                               future: _getDomainDetails(
@@ -516,21 +671,21 @@ class ProjectDetailScreen extends StatelessWidget {
                                 }
 
                                 return DropdownButtonFormField<int>(
-                                  value: selectedServiceId,
+                                  initialValue: selectedServiceId,
                                   decoration: InputDecoration(
                                     hintText: isArabic
                                         ? 'اختر نوع الخدمة التي تحتاجها'
                                         : 'Select the service you need',
-                                    hintStyle: const TextStyle(
+                                    hintStyle: TextStyle(
                                       fontFamily: 'Cairo',
-                                      fontSize: 14,
+                                      fontSize: isSmallScreen ? 12 : 14,
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(6),
                                     ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 12,
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: isSmallScreen ? 10 : 12,
+                                      vertical: isSmallScreen ? 10 : 12,
                                     ),
                                   ),
                                   items: servicesInDialog
@@ -539,9 +694,9 @@ class ProjectDetailScreen extends StatelessWidget {
                                           value: s.domainDetailId,
                                           child: Text(
                                             s.detailName,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontFamily: 'Cairo',
-                                              fontSize: 14,
+                                              fontSize: isSmallScreen ? 12 : 14,
                                             ),
                                           ),
                                         ),
@@ -561,18 +716,18 @@ class ProjectDetailScreen extends StatelessWidget {
                               },
                             ),
 
-                            const SizedBox(height: 16),
+                            SizedBox(height: isSmallScreen ? 12 : 16),
 
                             // Mobile Number
                             Text(
                               isArabic ? 'رقم الجوال *' : 'Mobile Number *',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontFamily: 'Cairo',
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: isSmallScreen ? 12 : 14,
                               ),
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: isSmallScreen ? 4 : 6),
                             TextFormField(
                               controller: mobileController,
                               keyboardType: TextInputType.phone,
@@ -580,34 +735,34 @@ class ProjectDetailScreen extends StatelessWidget {
                                 hintText: isArabic
                                     ? 'أدخل رقم الجوال'
                                     : 'Enter mobile number',
-                                hintStyle: const TextStyle(
+                                hintStyle: TextStyle(
                                   fontFamily: 'Cairo',
-                                  fontSize: 14,
+                                  fontSize: isSmallScreen ? 12 : 14,
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
                                 ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 12,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: isSmallScreen ? 10 : 12,
+                                  vertical: isSmallScreen ? 10 : 12,
                                 ),
                               ),
                             ),
 
-                            const SizedBox(height: 16),
+                            SizedBox(height: isSmallScreen ? 12 : 16),
 
                             // Email (Optional)
                             Text(
                               isArabic
                                   ? 'البريد الإلكتروني (اختياري)'
                                   : 'Email (Optional)',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontFamily: 'Cairo',
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: isSmallScreen ? 12 : 14,
                               ),
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: isSmallScreen ? 4 : 6),
                             TextFormField(
                               controller: emailController,
                               keyboardType: TextInputType.emailAddress,
@@ -615,142 +770,244 @@ class ProjectDetailScreen extends StatelessWidget {
                                 hintText: isArabic
                                     ? 'أدخل البريد الإلكتروني'
                                     : 'Enter email address',
-                                hintStyle: const TextStyle(
+                                hintStyle: TextStyle(
                                   fontFamily: 'Cairo',
-                                  fontSize: 14,
+                                  fontSize: isSmallScreen ? 12 : 14,
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
                                 ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 12,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: isSmallScreen ? 10 : 12,
+                                  vertical: isSmallScreen ? 10 : 12,
                                 ),
                               ),
                             ),
 
-                            const SizedBox(height: 16),
+                            SizedBox(height: isSmallScreen ? 12 : 16),
 
                             // Notes (Optional)
                             Text(
                               isArabic
                                   ? 'ملاحظات إضافية (اختياري)'
                                   : 'Additional Notes (Optional)',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontFamily: 'Cairo',
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: isSmallScreen ? 12 : 14,
                               ),
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: isSmallScreen ? 4 : 6),
                             TextFormField(
                               controller: noteController,
-                              maxLines: 3,
+                              maxLines: isSmallScreen ? 2 : 3,
                               decoration: InputDecoration(
                                 hintText: isArabic
                                     ? 'أضف أي تفاصيل إضافية عن متطلباتك'
                                     : 'Add any additional details about your requirements',
-                                hintStyle: const TextStyle(
+                                hintStyle: TextStyle(
                                   fontFamily: 'Cairo',
-                                  fontSize: 14,
+                                  fontSize: isSmallScreen ? 12 : 14,
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(6),
                                 ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 12,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: isSmallScreen ? 10 : 12,
+                                  vertical: isSmallScreen ? 10 : 12,
                                 ),
                               ),
                             ),
 
-                            const SizedBox(height: 24),
+                            SizedBox(height: isSmallScreen ? 20 : 24),
 
-                            // Buttons
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: OutlinedButton(
-                                    onPressed: () =>
-                                        Navigator.of(dialogCtx).pop(),
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: Colors.grey,
-                                      side: const BorderSide(
-                                        color: Colors.grey,
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 12,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      isArabic ? 'إلغاء' : 'Cancel',
-                                      style: const TextStyle(
-                                        fontFamily: 'Cairo',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      if (selectedServiceModel == null ||
-                                          mobileController.text.isEmpty) {
-                                        ScaffoldMessenger.of(
-                                          rootContext,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              isArabic
-                                                  ? 'يرجى تعبئة الحقول المطلوبة (نوع الخدمة ورقم الجوال)'
-                                                  : 'Please fill in the required fields (Service Type and Mobile Number)',
-                                              style: const TextStyle(
-                                                fontFamily: 'Cairo',
+                            // Buttons - Responsive
+                            if (isSmallScreen)
+                              // Mobile: Stacked buttons
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        if (selectedServiceModel == null ||
+                                            mobileController.text.isEmpty) {
+                                          ScaffoldMessenger.of(
+                                            rootContext,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                isArabic
+                                                    ? 'يرجى تعبئة الحقول المطلوبة (نوع الخدمة ورقم الجوال)'
+                                                    : 'Please fill in the required fields (Service Type and Mobile Number)',
+                                                style: const TextStyle(
+                                                  fontFamily: 'Cairo',
+                                                ),
                                               ),
+                                              backgroundColor: Colors.red,
                                             ),
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        );
-                                        return;
-                                      }
+                                          );
+                                          return;
+                                        }
 
-                                      _submitQuoteRequest(
-                                        rootContext, // use the page context for SnackBars
-                                        selectedServiceModel!,
-                                        mobileController.text,
-                                        emailController.text,
-                                        noteController.text,
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFF0B81B),
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 12,
+                                        _submitQuoteRequest(
+                                          rootContext, // use the page context for SnackBars
+                                          selectedServiceModel!,
+                                          mobileController.text,
+                                          emailController.text,
+                                          noteController.text,
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(
+                                          0xFFF0B81B,
+                                        ),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                        ),
                                       ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      isArabic
-                                          ? 'إرسال الطلب'
-                                          : 'Submit Request',
-                                      style: const TextStyle(
-                                        fontFamily: 'Cairo',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
+                                      child: Text(
+                                        isArabic
+                                            ? 'إرسال الطلب'
+                                            : 'Submit Request',
+                                        style: TextStyle(
+                                          fontFamily: 'Cairo',
+                                          fontSize: isSmallScreen ? 12 : 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                  const SizedBox(height: 10),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: OutlinedButton(
+                                      onPressed: () =>
+                                          Navigator.of(dialogCtx).pop(),
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: Colors.grey,
+                                        side: const BorderSide(
+                                          color: Colors.grey,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        isArabic ? 'إلغاء' : 'Cancel',
+                                        style: TextStyle(
+                                          fontFamily: 'Cairo',
+                                          fontSize: isSmallScreen ? 12 : 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            else
+                              // Desktop/Tablet: Side by side buttons
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: () =>
+                                          Navigator.of(dialogCtx).pop(),
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: Colors.grey,
+                                        side: const BorderSide(
+                                          color: Colors.grey,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        isArabic ? 'إلغاء' : 'Cancel',
+                                        style: const TextStyle(
+                                          fontFamily: 'Cairo',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        if (selectedServiceModel == null ||
+                                            mobileController.text.isEmpty) {
+                                          ScaffoldMessenger.of(
+                                            rootContext,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                isArabic
+                                                    ? 'يرجى تعبئة الحقول المطلوبة (نوع الخدمة ورقم الجوال)'
+                                                    : 'Please fill in the required fields (Service Type and Mobile Number)',
+                                                style: const TextStyle(
+                                                  fontFamily: 'Cairo',
+                                                ),
+                                              ),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        _submitQuoteRequest(
+                                          rootContext, // use the page context for SnackBars
+                                          selectedServiceModel!,
+                                          mobileController.text,
+                                          emailController.text,
+                                          noteController.text,
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(
+                                          0xFFF0B81B,
+                                        ),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        isArabic
+                                            ? 'إرسال الطلب'
+                                            : 'Submit Request',
+                                        style: const TextStyle(
+                                          fontFamily: 'Cairo',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                           ],
                         ),
                       ),
@@ -891,9 +1148,14 @@ class ProjectDetailScreen extends StatelessWidget {
   }
 
   // -------- reused small UI piece ----------
-  Widget _buildSpecificationItem(IconData icon, String title, String value) {
+  Widget _buildSpecificationItem(
+    IconData icon,
+    String title,
+    String value, {
+    bool isSmallScreen = false,
+  }) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: EdgeInsets.all(isSmallScreen ? 12 : 15),
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(10),
@@ -901,27 +1163,32 @@ class ProjectDetailScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: const Color(0xFFF0B81B), size: 24),
-          const SizedBox(width: 15),
+          Icon(
+            icon,
+            color: const Color(0xFFF0B81B),
+            size: isSmallScreen ? 20 : 24,
+          ),
+          SizedBox(width: isSmallScreen ? 12 : 15),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Cairo',
-                    fontSize: 14,
+                    fontSize: isSmallScreen ? 12 : 14,
                     color: Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 5),
+                SizedBox(height: isSmallScreen ? 3 : 5),
                 Text(
                   value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Cairo',
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
+                    fontSize: isSmallScreen ? 13 : 14,
                   ),
                 ),
               ],

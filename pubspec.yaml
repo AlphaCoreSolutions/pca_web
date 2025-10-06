@@ -42,7 +42,9 @@ dependencies:
   google_fonts: 
   http: 
   flutter_form_builder: 
-  form_builder_validators: 
+  form_builder_validators:
+  flutter_native_splash: ^2.3.10
+  url_launcher: ^6.2.4 
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +70,8 @@ flutter:
   generate: true
   assets:
     - assets/images/pca_logo.jpg
+    - assets/images/logor6.png
+    - assets/images/logo2.jpeg
     - assets/images/projects/civil_project.jpeg
     - assets/images/projects/electrical_project.jpg
     - assets/images/projects/hangar_project.jpeg
@@ -125,3 +129,18 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# Flutter Native Splash configuration
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/logo2.jpeg
+  color_dark: "#242424"
+  image_dark: assets/images/logo2.jpeg
+  android_12:
+    image: assets/images/logo2.jpeg
+    color: "#FFFFFF"
+    image_dark: assets/images/logo2.jpeg
+    color_dark: "#242424"
+  web: true
+  android: true
+  ios: true

@@ -198,290 +198,390 @@ class _ContactSectionState extends State<ContactSection> {
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
     final contactInfo = languageProvider.contactInfo;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth <= 600;
+    final isMediumScreen = screenWidth <= 1024;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 40),
+      padding: EdgeInsets.symmetric(
+        vertical: isSmallScreen
+            ? 40
+            : isMediumScreen
+            ? 60
+            : 80,
+        horizontal: isSmallScreen
+            ? 20
+            : isMediumScreen
+            ? 30
+            : 40,
+      ),
       color: Colors.grey[900],
       child: Column(
         children: [
           Text(
             languageProvider.contact,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
-              fontSize: 36,
+              fontSize: isSmallScreen
+                  ? 28
+                  : isMediumScreen
+                  ? 32
+                  : 36,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFF0B81B),
+              color: const Color(0xFFF0B81B),
             ),
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: isSmallScreen ? 8 : 10),
           Text(
             languageProvider.isArabic
                 ? 'تواصل مع شركة قوة البنية العربية للمقاولات'
                 : 'Contact Power Construction Arabia Contracting Company',
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
-              fontSize: 18,
+              fontSize: isSmallScreen ? 16 : 18,
               color: Colors.white70,
             ),
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 40),
+          SizedBox(
+            height: isSmallScreen
+                ? 20
+                : isMediumScreen
+                ? 30
+                : 40,
+          ),
 
-          Row(
-            children: [
-              // Contact Info
-              Expanded(
-                flex: 1,
-                child: Column(
-                  crossAxisAlignment: languageProvider.isArabic
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
+          isSmallScreen
+              ? Column(
                   children: [
-                    _buildContactInfo(
-                      Icons.business,
-                      languageProvider.companyName,
-                      languageProvider.isArabic,
-                    ),
-                    _buildContactInfo(
-                      Icons.assignment_ind,
-                      languageProvider.companyCR,
-                      languageProvider.isArabic,
-                    ),
-                    _buildContactInfo(
-                      Icons.location_on,
-                      contactInfo['address']!,
-                      languageProvider.isArabic,
-                    ),
-                    _buildContactInfo(
-                      Icons.phone,
-                      contactInfo['phone']!,
-                      languageProvider.isArabic,
-                    ),
-                    _buildContactInfo(
-                      Icons.email,
-                      contactInfo['email']!,
-                      languageProvider.isArabic,
-                    ),
-                    _buildContactInfo(
-                      Icons.access_time,
-                      contactInfo['working_hours']!,
-                      languageProvider.isArabic,
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(width: 60),
-
-              // Contact Form
-              Expanded(
-                flex: 1,
-                child: Container(
-                  padding: const EdgeInsets.all(30),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[800],
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
+                    // Contact Info Section
+                    Column(
+                      crossAxisAlignment: languageProvider.isArabic
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          languageProvider.isArabic
-                              ? 'ارسل رسالة'
-                              : 'Send Message',
-                          style: const TextStyle(
-                            fontFamily: 'Cairo',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                        _buildContactInfo(
+                          Icons.business,
+                          languageProvider.companyName,
+                          languageProvider.isArabic,
+                          isSmallScreen,
                         ),
-                        const SizedBox(height: 30),
-
-                        // Name
-                        TextFormField(
-                          controller: _nameController,
-                          decoration: InputDecoration(
-                            labelText: languageProvider.isArabic
-                                ? 'الاسم الكامل'
-                                : 'Full Name',
-                            labelStyle: const TextStyle(
-                              fontFamily: 'Cairo',
-                              color: Colors.grey,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[700],
-                          ),
-                          validator: (value) =>
-                              _validateRequired(value, 'name'),
+                        _buildContactInfo(
+                          Icons.assignment_ind,
+                          languageProvider.companyCR,
+                          languageProvider.isArabic,
+                          isSmallScreen,
                         ),
-                        const SizedBox(height: 20),
-
-                        // Email
-                        TextFormField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                            labelText: languageProvider.isArabic
-                                ? 'البريد الإلكتروني'
-                                : 'Email',
-                            labelStyle: const TextStyle(
-                              fontFamily: 'Cairo',
-                              color: Colors.grey,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[700],
-                          ),
-                          validator: _validateEmail,
-                          keyboardType: TextInputType.emailAddress,
+                        _buildContactInfo(
+                          Icons.location_on,
+                          contactInfo['address']!,
+                          languageProvider.isArabic,
+                          isSmallScreen,
                         ),
-                        const SizedBox(height: 20),
-
-                        // Mobile (NEW)
-                        TextFormField(
-                          controller: _mobileController,
-                          decoration: InputDecoration(
-                            labelText: languageProvider.isArabic
-                                ? 'رقم الجوال'
-                                : 'Mobile Number',
-                            hintText: languageProvider.isArabic
-                                ? 'مثال: 0555555555'
-                                : 'e.g. 0555555555',
-                            labelStyle: const TextStyle(
-                              fontFamily: 'Cairo',
-                              color: Colors.grey,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[700],
-                          ),
-                          keyboardType: TextInputType.phone,
-                          validator: _validateMobile,
+                        _buildContactInfo(
+                          Icons.phone,
+                          contactInfo['phone']!,
+                          languageProvider.isArabic,
+                          isSmallScreen,
                         ),
-                        const SizedBox(height: 20),
-
-                        // Subject
-                        TextFormField(
-                          controller: _subjectController,
-                          decoration: InputDecoration(
-                            labelText: languageProvider.isArabic
-                                ? 'الموضوع'
-                                : 'Subject',
-                            labelStyle: const TextStyle(
-                              fontFamily: 'Cairo',
-                              color: Colors.grey,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[700],
-                          ),
-                          validator: (value) =>
-                              _validateRequired(value, 'subject'),
+                        _buildContactInfo(
+                          Icons.email,
+                          contactInfo['email']!,
+                          languageProvider.isArabic,
+                          isSmallScreen,
                         ),
-                        const SizedBox(height: 20),
-
-                        // Message
-                        TextFormField(
-                          controller: _messageController,
-                          maxLines: 4,
-                          decoration: InputDecoration(
-                            labelText: languageProvider.isArabic
-                                ? 'الرسالة'
-                                : 'Message',
-                            labelStyle: const TextStyle(
-                              fontFamily: 'Cairo',
-                              color: Colors.grey,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[700],
-                          ),
-                          validator: (value) =>
-                              _validateRequired(value, 'message'),
-                        ),
-                        const SizedBox(height: 30),
-
-                        // Submit
-                        ElevatedButton(
-                          onPressed: _isLoading
-                              ? null
-                              : () => _submitForm(context),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFF0B81B),
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size(double.infinity, 50),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            disabledBackgroundColor: Colors.grey[600],
-                          ),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
-                                  ),
-                                )
-                              : Text(
-                                  languageProvider.isArabic
-                                      ? 'إرسال الرسالة'
-                                      : 'Send Message',
-                                  style: const TextStyle(
-                                    fontFamily: 'Cairo',
-                                    fontSize: 16,
-                                  ),
-                                ),
+                        _buildContactInfo(
+                          Icons.access_time,
+                          contactInfo['working_hours']!,
+                          languageProvider.isArabic,
+                          isSmallScreen,
                         ),
                       ],
                     ),
-                  ),
+
+                    const SizedBox(height: 40),
+
+                    // Contact Form Section
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(isSmallScreen ? 20 : 30),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[800],
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: _buildForm(languageProvider, isSmallScreen),
+                    ),
+                  ],
+                )
+              : Row(
+                  children: [
+                    // Contact Info
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: languageProvider.isArabic
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
+                        children: [
+                          _buildContactInfo(
+                            Icons.business,
+                            languageProvider.companyName,
+                            languageProvider.isArabic,
+                            isSmallScreen,
+                          ),
+                          _buildContactInfo(
+                            Icons.assignment_ind,
+                            languageProvider.companyCR,
+                            languageProvider.isArabic,
+                            isSmallScreen,
+                          ),
+                          _buildContactInfo(
+                            Icons.location_on,
+                            contactInfo['address']!,
+                            languageProvider.isArabic,
+                            isSmallScreen,
+                          ),
+                          _buildContactInfo(
+                            Icons.phone,
+                            contactInfo['phone']!,
+                            languageProvider.isArabic,
+                            isSmallScreen,
+                          ),
+                          _buildContactInfo(
+                            Icons.email,
+                            contactInfo['email']!,
+                            languageProvider.isArabic,
+                            isSmallScreen,
+                          ),
+                          _buildContactInfo(
+                            Icons.access_time,
+                            contactInfo['working_hours']!,
+                            languageProvider.isArabic,
+                            isSmallScreen,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(width: isMediumScreen ? 40 : 60),
+
+                    // Contact Form
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: EdgeInsets.all(isMediumScreen ? 25 : 30),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[800],
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: _buildForm(languageProvider, isSmallScreen),
+                      ),
+                    ),
+                  ],
                 ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildForm(LanguageProvider languageProvider, bool isSmallScreen) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Text(
+            languageProvider.isArabic ? 'ارسل رسالة' : 'Send Message',
+            style: TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: isSmallScreen ? 20 : 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: isSmallScreen ? 20 : 30),
+
+          // Name
+          TextFormField(
+            controller: _nameController,
+            decoration: InputDecoration(
+              labelText: languageProvider.isArabic
+                  ? 'الاسم الكامل'
+                  : 'Full Name',
+              labelStyle: const TextStyle(
+                fontFamily: 'Cairo',
+                color: Colors.grey,
               ),
-            ],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              filled: true,
+              fillColor: Colors.grey[700],
+            ),
+            validator: (value) => _validateRequired(value, 'name'),
+          ),
+          SizedBox(height: isSmallScreen ? 15 : 20),
+
+          // Email
+          TextFormField(
+            controller: _emailController,
+            decoration: InputDecoration(
+              labelText: languageProvider.isArabic
+                  ? 'البريد الإلكتروني'
+                  : 'Email',
+              labelStyle: const TextStyle(
+                fontFamily: 'Cairo',
+                color: Colors.grey,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              filled: true,
+              fillColor: Colors.grey[700],
+            ),
+            validator: _validateEmail,
+            keyboardType: TextInputType.emailAddress,
+          ),
+          SizedBox(height: isSmallScreen ? 15 : 20),
+
+          // Mobile
+          TextFormField(
+            controller: _mobileController,
+            decoration: InputDecoration(
+              labelText: languageProvider.isArabic
+                  ? 'رقم الجوال'
+                  : 'Mobile Number',
+              hintText: languageProvider.isArabic
+                  ? 'مثال: 0555555555'
+                  : 'e.g. 0555555555',
+              labelStyle: const TextStyle(
+                fontFamily: 'Cairo',
+                color: Colors.grey,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              filled: true,
+              fillColor: Colors.grey[700],
+            ),
+            keyboardType: TextInputType.phone,
+            validator: _validateMobile,
+          ),
+          SizedBox(height: isSmallScreen ? 15 : 20),
+
+          // Subject
+          TextFormField(
+            controller: _subjectController,
+            decoration: InputDecoration(
+              labelText: languageProvider.isArabic ? 'الموضوع' : 'Subject',
+              labelStyle: const TextStyle(
+                fontFamily: 'Cairo',
+                color: Colors.grey,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              filled: true,
+              fillColor: Colors.grey[700],
+            ),
+            validator: (value) => _validateRequired(value, 'subject'),
+          ),
+          SizedBox(height: isSmallScreen ? 15 : 20),
+
+          // Message
+          TextFormField(
+            controller: _messageController,
+            maxLines: isSmallScreen ? 3 : 4,
+            decoration: InputDecoration(
+              labelText: languageProvider.isArabic ? 'الرسالة' : 'Message',
+              labelStyle: const TextStyle(
+                fontFamily: 'Cairo',
+                color: Colors.grey,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              filled: true,
+              fillColor: Colors.grey[700],
+            ),
+            validator: (value) => _validateRequired(value, 'message'),
+          ),
+          SizedBox(height: isSmallScreen ? 20 : 30),
+
+          // Submit
+          ElevatedButton(
+            onPressed: _isLoading ? null : () => _submitForm(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFF0B81B),
+              foregroundColor: Colors.white,
+              minimumSize: Size(double.infinity, isSmallScreen ? 45 : 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              disabledBackgroundColor: Colors.grey[600],
+            ),
+            child: _isLoading
+                ? SizedBox(
+                    height: isSmallScreen ? 18 : 20,
+                    width: isSmallScreen ? 18 : 20,
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Text(
+                    languageProvider.isArabic
+                        ? 'إرسال الرسالة'
+                        : 'Send Message',
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: isSmallScreen ? 14 : 16,
+                    ),
+                  ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildContactInfo(IconData icon, String text, bool isArabic) {
+  Widget _buildContactInfo(
+    IconData icon,
+    String text,
+    bool isArabic,
+    bool isSmallScreen,
+  ) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: EdgeInsets.only(bottom: isSmallScreen ? 15 : 20),
       child: Row(
         mainAxisAlignment: isArabic
             ? MainAxisAlignment.end
             : MainAxisAlignment.start,
         children: [
-          if (!isArabic) Icon(icon, color: const Color(0xFFF0B81B), size: 24),
-          if (!isArabic) const SizedBox(width: 15),
+          if (!isArabic)
+            Icon(
+              icon,
+              color: const Color(0xFFF0B81B),
+              size: isSmallScreen ? 20 : 24,
+            ),
+          if (!isArabic) SizedBox(width: isSmallScreen ? 10 : 15),
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Cairo',
-                fontSize: 16,
+                fontSize: isSmallScreen ? 14 : 16,
                 color: Colors.white,
               ),
               textAlign: isArabic ? TextAlign.right : TextAlign.left,
             ),
           ),
-          if (isArabic) const SizedBox(width: 15),
-          if (isArabic) Icon(icon, color: const Color(0xFFF0B81B), size: 24),
+          if (isArabic) SizedBox(width: isSmallScreen ? 10 : 15),
+          if (isArabic)
+            Icon(
+              icon,
+              color: const Color(0xFFF0B81B),
+              size: isSmallScreen ? 20 : 24,
+            ),
         ],
       ),
     );

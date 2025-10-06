@@ -8,79 +8,164 @@ class CompanyStatsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth <= 600;
+    final isMediumScreen = screenWidth <= 1024;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 40),
+      padding: EdgeInsets.symmetric(
+        vertical: isSmallScreen
+            ? 40
+            : isMediumScreen
+            ? 50
+            : 60,
+        horizontal: isSmallScreen
+            ? 20
+            : isMediumScreen
+            ? 30
+            : 40,
+      ),
       color: Colors.black,
       child: Column(
         children: [
           Text(
-            languageProvider.isArabic ? 'الشركة في أرقام' : 'Company in Numbers',
-            style: const TextStyle(
+            languageProvider.isArabic
+                ? 'الشركة في أرقام'
+                : 'Company in Numbers',
+            style: TextStyle(
               fontFamily: 'Cairo',
-              fontSize: 36,
+              fontSize: isSmallScreen
+                  ? 28
+                  : isMediumScreen
+                  ? 32
+                  : 36,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFF0B81B),
+              color: const Color(0xFFF0B81B),
             ),
+            textAlign: TextAlign.center,
           ),
-          
-          const SizedBox(height: 10),
-          
+
+          SizedBox(height: isSmallScreen ? 8 : 10),
+
           Text(
             languageProvider.isArabic
                 ? 'إنجازاتنا تتحدث عن نفسها'
                 : 'Our achievements speak for themselves',
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
-              fontSize: 18,
+              fontSize: isSmallScreen ? 16 : 18,
               color: Colors.white70,
             ),
+            textAlign: TextAlign.center,
           ),
-          
-          const SizedBox(height: 50),
-          
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStatItem('3+', languageProvider.experienceYears, Icons.calendar_today),
-              _buildStatItem('28', languageProvider.clientsCount, Icons.groups),
-              _buildStatItem('10M+', languageProvider.projectsValue, Icons.attach_money),
-              _buildStatItem('40+', languageProvider.projectsCount, Icons.construction),
-            ],
+
+          SizedBox(
+            height: isSmallScreen
+                ? 30
+                : isMediumScreen
+                ? 40
+                : 50,
           ),
+
+          isSmallScreen
+              ? Wrap(
+                  spacing: 20,
+                  runSpacing: 30,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    _buildStatItem(
+                      '3+',
+                      languageProvider.experienceYears,
+                      Icons.calendar_today,
+                      isSmallScreen,
+                    ),
+                    _buildStatItem(
+                      '28',
+                      languageProvider.clientsCount,
+                      Icons.groups,
+                      isSmallScreen,
+                    ),
+                    _buildStatItem(
+                      '10M+',
+                      languageProvider.projectsValue,
+                      Icons.attach_money,
+                      isSmallScreen,
+                    ),
+                    _buildStatItem(
+                      '40+',
+                      languageProvider.projectsCount,
+                      Icons.construction,
+                      isSmallScreen,
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildStatItem(
+                      '3+',
+                      languageProvider.experienceYears,
+                      Icons.calendar_today,
+                      isSmallScreen,
+                    ),
+                    _buildStatItem(
+                      '28',
+                      languageProvider.clientsCount,
+                      Icons.groups,
+                      isSmallScreen,
+                    ),
+                    _buildStatItem(
+                      '10M+',
+                      languageProvider.projectsValue,
+                      Icons.attach_money,
+                      isSmallScreen,
+                    ),
+                    _buildStatItem(
+                      '40+',
+                      languageProvider.projectsCount,
+                      Icons.construction,
+                      isSmallScreen,
+                    ),
+                  ],
+                ),
         ],
       ),
     );
   }
 
-  Widget _buildStatItem(String value, String label, IconData icon) {
+  Widget _buildStatItem(
+    String value,
+    String label,
+    IconData icon,
+    bool isSmallScreen,
+  ) {
     return Column(
       children: [
         Container(
-          width: 80,
-          height: 80,
+          width: isSmallScreen ? 60 : 80,
+          height: isSmallScreen ? 60 : 80,
           decoration: const BoxDecoration(
-            color:Color(0xFFF0B81B),
+            color: Color(0xFFF0B81B),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, size: 40, color: Colors.white),
+          child: Icon(icon, size: isSmallScreen ? 30 : 40, color: Colors.white),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: isSmallScreen ? 15 : 20),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cairo',
-            fontSize: 42,
+            fontSize: isSmallScreen ? 30 : 42,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: isSmallScreen ? 8 : 10),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cairo',
-            fontSize: 16,
+            fontSize: isSmallScreen ? 14 : 16,
             color: Colors.white70,
           ),
           textAlign: TextAlign.center,

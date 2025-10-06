@@ -98,7 +98,7 @@ class APIHandler {
 
   Future<List<DomainDetailModel>> getDomainDetail(int id) async {
     try {
-      final uri = Uri.parse('${baseURL}/Domain/detail/$id');
+      final uri = Uri.parse('$baseURL/Domain/detail/$id');
       final response = await http.get(
         uri,
         headers: <String, String>{

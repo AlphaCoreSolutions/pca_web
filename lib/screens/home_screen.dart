@@ -11,7 +11,6 @@ import 'package:pca_website/foundation/widgets/projects_section.dart';
 import 'package:pca_website/foundation/widgets/services_section.dart';
 import 'package:provider/provider.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -49,7 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       body: Directionality(
-        textDirection: languageProvider.isArabic ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: languageProvider.isArabic
+            ? TextDirection.rtl
+            : TextDirection.ltr,
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
@@ -79,21 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             // CEO Message Section
-            const SliverToBoxAdapter(
-              child: CeoMessageSection(),
-            ),
+            const SliverToBoxAdapter(child: CeoMessageSection()),
 
             // Company Statistics
-            const SliverToBoxAdapter(
-              child: CompanyStatsSection(),
-            ),
+            const SliverToBoxAdapter(child: CompanyStatsSection()),
 
             // About Us Section
             SliverToBoxAdapter(
-              child: KeyedSubtree(
-                key: _aboutKey,
-                child: const AboutUs(),
-              ),
+              child: KeyedSubtree(key: _aboutKey, child: const AboutUs()),
             ),
 
             // Services Section (خدماتنا)
@@ -121,8 +115,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             // Footer
-            const SliverToBoxAdapter(
-              child: Footer(),
+            SliverToBoxAdapter(
+              child: Footer(
+                onAboutUs: () => _scrollToSection(_aboutKey),
+                onServices: () => _scrollToSection(_servicesKey),
+                onProjects: () => _scrollToSection(_projectsKey),
+                onContact: () => _scrollToSection(_contactKey),
+              ),
             ),
           ],
         ),
