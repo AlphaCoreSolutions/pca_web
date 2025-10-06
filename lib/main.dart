@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pca_website/foundation/providers/language_provider.dart';
 import 'package:pca_website/foundation/providers/theme_provider.dart';
-import 'package:pca_website/screens/home_screen.dart';
 import 'package:pca_website/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
