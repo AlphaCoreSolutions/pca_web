@@ -6,6 +6,7 @@ import 'package:pca_website/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyWebsite());
 }
 

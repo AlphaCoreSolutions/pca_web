@@ -1,129 +1,104 @@
-<!DOCTYPE html><html><head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
+<!DOCTYPE html>
+<html>
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
+<head>
   <base href="$FLUTTER_BASE_HREF">
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="PCA - Power Construction Arabia. Leading construction and engineering company providing comprehensive solutions for electrical, mechanical, civil, and infrastructure projects.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="description"
+    content="PCA - Power Construction Arabia. Leading construction and engineering company providing comprehensive solutions for electrical, mechanical, civil, and infrastructure projects.">
 
-  <!-- iOS meta tags & icons -->
+  <!-- Brand colors for browser UI -->
+  <meta name="theme-color" content="#F0B81B" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="PCA - Power Construction Arabia">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <!-- Favicon -->
+  <title>PCA - Power Construction Arabia</title>
+
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
   <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="shortcut icon" type="image/png" href="favicon.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/Icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icons/Icon-512.png">
-  
-  <!-- Windows meta tags -->
   <meta name="msapplication-TileImage" content="icons/Icon-192.png">
   <meta name="msapplication-TileColor" content="#F0B81B">
-
-  <title>PCA - Power Construction Arabia</title>
   <link rel="manifest" href="manifest.json">
-  
-  
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
-  
-  
-  <style id="splash-screen-style">
-    html {
-      height: 100%
+
+  <style>
+    :root {
+      --gold: #ffffff;
+      --gold-mid: #FFF4C4;
+      --gold-light: #FFF4C4;
     }
 
+    html,
     body {
+      height: 100%;
       margin: 0;
-      min-height: 100%;
-      background-color: #FFFFFF;
-          background-size: 100% 100%;
+      background:
+        radial-gradient(circle at 50% 30%, var(--gold-light) 0%, transparent 55%),
+        linear-gradient(to bottom, var(--gold-light) 0%, var(--gold-mid) 55%, var(--gold) 100%);
+      color-scheme: light;
     }
 
-    .center {
-      margin: 0;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      -ms-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
+    /* PREBOOT overlay that shows before Flutter paints */
+    #preboot {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 30%, var(--gold-light) 0%, transparent 55%),
+        linear-gradient(to bottom, var(--gold-light) 0%, var(--gold-mid) 55%, var(--gold) 100%);
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity .35s ease;
+      /* <-- fade out speed */
+      pointer-events: none;
+      /* overlay is visual only */
     }
 
-    .contain {
-      display:block;
-      width:100%; height:100%;
-      object-fit: contain;
+    #preboot.hide {
+      opacity: 0;
     }
 
-    .stretch {
-      display:block;
-      width:100%; height:100%;
+    /* Start Flutter glass pane invisible, then fade in when ready */
+    flt-glass-pane {
+      opacity: 0;
+      transition: opacity .35s ease;
+      /* <-- fade in speed */
     }
 
-    .cover {
-      display:block;
-      width:100%; height:100%;
-      object-fit: cover;
+    html.flutter-ready flt-glass-pane {
+      opacity: 1;
     }
 
-    .bottom {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      -ms-transform: translate(-50%, 0);
-      transform: translate(-50%, 0);
-    }
-
-    .bottomLeft {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-    }
-
-    .bottomRight {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #242424;
-          }
+    /* Ensure nothing paints white */
+    #flutter_container,
+    #flutter-target,
+    canvas {
+      background: transparent !important;
     }
   </style>
-  <script id="splash-screen-script">
-    function removeSplashFromWeb() {
-      document.getElementById("splash")?.remove();
-      document.getElementById("splash-branding")?.remove();
-      document.body.style.background = "transparent";
-    }
-  </script>
+
 </head>
+
 <body>
-  <picture id="splash">
-      <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
-      <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
-      <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt="">
-  </picture>
-  
-  
-  <script src="flutter_bootstrap.js" async=""></script>
+  <div id="preboot"></div>
+  <script>
+    // When Flutter draws its first frame, cross-fade the views
+    window.addEventListener('flutter-first-frame', function () {
+      document.documentElement.classList.add('flutter-ready'); // fades IN canvas
+      const pre = document.getElementById('preboot');
+      if (pre) {
+        pre.classList.add('hide');                   // fades OUT overlay
+        setTimeout(() => pre.remove(), 450);         // remove after transition
+      }
+    });
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
 
-
-</body></html>
+</html>
